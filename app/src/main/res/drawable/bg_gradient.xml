@@ -1,1 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#D0F0FD"
+                android:endColor="#E6F7FF"
+                android:angle="45"/>
+
+            <gradient
+                android:startColor="@color/cardview_light_background"
+                android:endColor="@color/purple_accent"
+                android:angle="45"/>
+
+        </shape>
+    </item>
+</layer-list>
 
