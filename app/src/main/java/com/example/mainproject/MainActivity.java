@@ -3,57 +3,67 @@ package com.example.mainproject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Gravity;
 import android.widget.*;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     LinearLayout topArea;
-    TextView txtSchedule, txtSelectedDate;
+    TextView txtSchedule, txtTimeline, txtSelectedDate;
     CalendarView calendarView;
     Button btnCustomizeCalendar, btnSettings, btnMenu;
 
     String selectedDate = "";
     SharedPreferences sharedPreferences;
 
+    // Define hardcoded daily schedule
+    List<ScheduledEvent> scheduledEvents = Arrays.asList(
+            new ScheduledEvent("09:00", "Meeting"),
+            new ScheduledEvent("12:00", "Lunch"),
+            new ScheduledEvent("16:00", "Report Submission")
+    );
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);  // Ensure your XML file is named correctly
+        setContentView(R.layout.activity_main);
 
-        // Link UI elements to their IDs in XML
         topArea = findViewById(R.id.topArea);
         txtSchedule = findViewById(R.id.txtSchedule);
+        txtTimeline = findViewById(R.id.txtTimeline);
         txtSelectedDate = findViewById(R.id.txtSelectedDate);
         calendarView = findViewById(R.id.calendarView);
         btnCustomizeCalendar = findViewById(R.id.btnCustomizeCalendar);
         btnSettings = findViewById(R.id.btnSettings);
         btnMenu = findViewById(R.id.btnMenu);
 
-        // Optional: Customize top bar color
         if (topArea != null) {
             topArea.setBackgroundColor(Color.parseColor("#FFBB86FC"));
         }
 
-        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("MySchedules", MODE_PRIVATE);
 
-        // Calendar date selection
+        // Show today's schedule by default
+        updateScheduleView();
+
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
             txtSelectedDate.setText("Selected Date: " + selectedDate);
-
-            // Load saved schedule or show default
-            String schedule = sharedPreferences.getString(selectedDate, "No schedule for this date.");
-            txtSchedule.setText("Schedule for " + selectedDate + ":\n" + schedule);
+            updateScheduleView();
         });
 
-        // Customize Calendar button
         btnCustomizeCalendar.setOnClickListener(v -> {
             if (selectedDate == null || selectedDate.isEmpty()) {
                 Toast.makeText(this, "Please select a date first.", Toast.LENGTH_SHORT).show();
@@ -72,17 +82,56 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btnMenu.setOnClickListener(v ->
-                Toast.makeText(this, "Subscription feature coming soon!", Toast.LENGTH_SHORT).show()
-        );
+        btnMenu.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(MainActivity.this, SubscriptionActivity.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(this, "Error opening subscription: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateScheduleView() {
+        String scheduleText = sharedPreferences.getString(selectedDate, "");
+        StringBuilder scheduleBuilder = new StringBuilder();
+
+        if (!scheduleText.isEmpty()) {
+            scheduleBuilder.append("Schedule for ").append(selectedDate).append(":\n").append(scheduleText);
+        } else {
+            scheduleBuilder.append("No schedule for ").append(selectedDate);
+        }
+
+        txtSchedule.setText(scheduleBuilder.toString());
+        updateTimelineView();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateTimelineView() {
+        LocalTime now = LocalTime.now();
+        StringBuilder timeline = new StringBuilder();
+
+        for (ScheduledEvent event : scheduledEvents) {
+            if (now.isAfter(event.getTime())) {
+                timeline.append("\u2022 ").append(event.time).append(" - ").append(event.description).append("\n");
+            }
+        }
+
+        if (timeline.length() == 0) {
+            timeline.append("No past events yet.");
+        }
+
+        txtTimeline.setText("Timeline:\n" + timeline);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void showScheduleInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter Schedule for " + selectedDate);
 
         final EditText input = new EditText(this);
-        input.setHint("E.g., • Meeting at 10AM\n• Call at 3PM");
+        input.setHint("E.g., \u2022 Meeting at 10AM\n\u2022 Call at 3PM");
         input.setMinLines(4);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.setGravity(Gravity.TOP);
@@ -92,15 +141,30 @@ public class MainActivity extends AppCompatActivity {
             String scheduleText = input.getText().toString().trim();
             if (!scheduleText.isEmpty()) {
                 sharedPreferences.edit().putString(selectedDate, scheduleText).apply();
-                txtSchedule.setText("Schedule for " + selectedDate + ":\n" + scheduleText);
                 Toast.makeText(this, "Schedule saved.", Toast.LENGTH_SHORT).show();
+                updateScheduleView();
             } else {
                 Toast.makeText(this, "Empty schedule not saved.", Toast.LENGTH_SHORT).show();
             }
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
         builder.show();
+    }
+
+    // Inner class for scheduled events
+    public static class ScheduledEvent {
+        public String time;
+        public String description;
+
+        public ScheduledEvent(String time, String description) {
+            this.time = time;
+            this.description = description;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.O)
+        public LocalTime getTime() {
+            return LocalTime.parse(time); // Format must be HH:mm
+        }
     }
 }

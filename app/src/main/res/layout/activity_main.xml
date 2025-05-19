@@ -75,7 +75,7 @@
                 android:background="#CCCCCC"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Schedule -->
+            <!-- Schedule Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
                 android:text="• Meeting at 9:00 AM\n• Lunch at 12:00 PM\n• Report Submission at 4:00 PM"
                 android:paddingBottom="8dp" />
 
-            <!-- Timeline -->
+            <!-- Timeline Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,9 +101,12 @@
                 android:paddingTop="16dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/txtTimeline"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="09:00 - Meeting\n12:00 - Lunch\n16:00 - Report Submission" />
+                android:text="No past events yet."
+                android:textColor="#333333"
+                android:paddingBottom="8dp" />
 
             <!-- Recommendation -->
             <TextView
@@ -127,7 +130,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Selected Date Info (moved here) -->
+            <!-- Selected Date Info -->
             <TextView
                 android:id="@+id/txtSelectedDate"
                 android:layout_width="wrap_content"
