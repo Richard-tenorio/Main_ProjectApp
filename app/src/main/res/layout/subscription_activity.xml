@@ -48,7 +48,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Basic Plan\nAccess to core features"
+                    android:text="1 Month Plan\nAccess to core features"
                     android:textSize="16sp"
                     android:paddingStart="12dp"
                     android:gravity="center_vertical" />
@@ -100,7 +100,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Premium Plan\nAll the Time"
+                    android:text="Whole Semester Plan\nAll the Time"
                     android:textSize="16sp"
                     android:paddingStart="12dp"
                     android:gravity="center_vertical" />
