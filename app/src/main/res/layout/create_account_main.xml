@@ -26,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/etFirstName"
-        app:layout_constraintHorizontalWeight="1" />
+        app:layout_constraintHorizontal_weight="1" />
 
     <!-- First Name -->
     <EditText
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
         app:layout_constraintStart_toEndOf="@id/etLastName"
         app:layout_constraintEnd_toStartOf="@id/etMiddleName"
-        app:layout_constraintHorizontalWeight="1" />
+        app:layout_constraintHorizontal_weight="1" />
 
     <!-- Middle Name -->
     <EditText
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvNameLabel"
         app:layout_constraintStart_toEndOf="@id/etFirstName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontalWeight="1" />
+        app:layout_constraintHorizontal_weight="1" />
 
     <!-- Birthdate Label -->
     <TextView
@@ -101,7 +101,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvAddressLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/etCity"
-        app:layout_constraintHorizontalWeight="1" />
+        app:layout_constraintHorizontal_weight="1" />
 
     <!-- City -->
     <EditText
@@ -114,7 +114,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvAddressLabel"
         app:layout_constraintStart_toEndOf="@id/etAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontalWeight="1" />
+        app:layout_constraintHorizontal_weight="1" />
 
     <!-- Username Label -->
     <TextView

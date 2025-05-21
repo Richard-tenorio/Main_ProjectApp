@@ -20,13 +20,13 @@ public class CreateAccountActivity extends AppCompatActivity {
     Button btnConfirm;
 
     private static final String REGISTER_URL = "http://10.0.2.2/myapp/register.php";
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account_main);
 
-        // Initialize views
         etLastName = findViewById(R.id.etLastName);
         etFirstName = findViewById(R.id.etFirstName);
         etMiddleName = findViewById(R.id.etMiddleName);
@@ -39,7 +39,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         etBirthdate = findViewById(R.id.etBirthdate);
         btnConfirm = findViewById(R.id.btnConfirm);
 
-        // Show date picker on birthdate field click
         etBirthdate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
@@ -128,37 +127,42 @@ public class CreateAccountActivity extends AppCompatActivity {
         data.put("password", password);
         data.put("birthdate", birthdate);
 
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Registering...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Registering...");
+            progressDialog.setCancelable(false);
+        }
 
-        HttpRequestHelper.sendPost(REGISTER_URL, data, result -> {
-            runOnUiThread(() -> {
+        if (!isFinishing() && !progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+
+        HttpRequestHelper.sendPost(REGISTER_URL, data, result -> runOnUiThread(() -> {
+            if (progressDialog != null && progressDialog.isShowing() && !isFinishing()) {
                 progressDialog.dismiss();
-                Log.d("ServerResponse", result);
+            }
 
-                try {
-                    JSONObject jsonResponse = new JSONObject(result);
-                    String status = jsonResponse.optString("status", "error");
-                    String message = jsonResponse.optString("message", "Unknown error occurred.");
+            Log.d("ServerResponse", result);
 
-                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            try {
+                JSONObject jsonResponse = new JSONObject(result);
+                String status = jsonResponse.optString("status", "error");
+                String message = jsonResponse.optString("message", "Unknown error occurred.");
 
-                    if ("success".equalsIgnoreCase(status)) {
-                        Toast.makeText(this, "Redirecting to login...", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Log.e("RegisterError", "Registration failed: " + message);
-                    }
-                } catch (Exception e) {
-                    Log.e("JSONParse", "Error parsing response: " + e.getMessage());
-                    Toast.makeText(this, "Invalid server response.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+                if ("success".equalsIgnoreCase(status)) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Log.e("RegisterError", "Registration failed: " + message);
                 }
-            });
-        });
+            } catch (Exception e) {
+                Log.e("JSONParse", "Error parsing response: ", e);
+                Toast.makeText(this, "Invalid server response.", Toast.LENGTH_LONG).show();
+            }
+        }));
     }
 
     private boolean isValidUsername(String username) {
@@ -170,5 +174,13 @@ public class CreateAccountActivity extends AppCompatActivity {
         selectedDate.set(year, month, day);
         Calendar today = Calendar.getInstance();
         return !selectedDate.after(today);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }
