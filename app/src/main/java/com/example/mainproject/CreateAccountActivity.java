@@ -1,18 +1,22 @@
 package com.example.mainproject;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class CreateAccountActivity extends AppCompatActivity {
 
     EditText etLastName, etFirstName, etMiddleName;
     EditText etAddress, etCity, etUsername, etEmail, etPassword, etConfirmPassword;
+    EditText etBirthdate;
     Button btnConfirm;
 
     private static final String REGISTER_URL = "http://10.0.2.2/myapp/register.php";
@@ -32,13 +36,32 @@ public class CreateAccountActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
+        etBirthdate = findViewById(R.id.etBirthdate);
         btnConfirm = findViewById(R.id.btnConfirm);
+
+        // Show date picker on birthdate field click
+        etBirthdate.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    CreateAccountActivity.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String formattedDate = String.format("%02d/%02d/%04d", selectedMonth + 1, selectedDay, selectedYear);
+                        etBirthdate.setText(formattedDate);
+                    },
+                    year, month, day
+            );
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis()); // Prevent future dates
+            datePickerDialog.show();
+        });
 
         btnConfirm.setOnClickListener(v -> registerUser());
     }
 
     private void registerUser() {
-        // Collect input
         String lastName = etLastName.getText().toString().trim();
         String firstName = etFirstName.getText().toString().trim();
         String middleName = etMiddleName.getText().toString().trim();
@@ -48,25 +71,52 @@ public class CreateAccountActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
+        String birthdateInput = etBirthdate.getText().toString().trim();
 
-        // Basic validation
         if (lastName.isEmpty() || firstName.isEmpty() || username.isEmpty()
-                || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(this, "Please fill in all required fields.", Toast.LENGTH_SHORT).show();
+                || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()
+                || address.isEmpty() || city.isEmpty() || birthdateInput.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Invalid email address.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.length() < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!isValidUsername(username)) {
-            Toast.makeText(this, "Invalid username. Use A or K followed by 8 digits.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Username must start with A or K followed by 8 digits.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Prepare data to send
+        String[] dateParts = birthdateInput.split("/");
+        if (dateParts.length != 3) {
+            Toast.makeText(this, "Invalid birthdate format.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int month = Integer.parseInt(dateParts[0]) - 1;
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+
+        if (!isValidBirthdate(year, month, day)) {
+            Toast.makeText(this, "Birthdate cannot be in the future.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String birthdate = String.format("%04d-%02d-%02d", year, month + 1, day);
+
         HashMap<String, String> data = new HashMap<>();
         data.put("lastname", lastName);
         data.put("firstname", firstName);
@@ -76,18 +126,16 @@ public class CreateAccountActivity extends AppCompatActivity {
         data.put("username", username);
         data.put("email", email);
         data.put("password", password);
+        data.put("birthdate", birthdate);
 
-        // Show loading
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        // Send POST request
         HttpRequestHelper.sendPost(REGISTER_URL, data, result -> {
             progressDialog.dismiss();
             Log.d("ServerResponse", result);
-
             try {
                 JSONObject jsonResponse = new JSONObject(result);
                 String status = jsonResponse.optString("status", "error");
@@ -103,7 +151,6 @@ public class CreateAccountActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 Log.e("JSONParse", "Error parsing response: " + e.getMessage());
-                Log.e("JSONParse", "Raw response: " + result);
                 Toast.makeText(this, "Invalid server response.", Toast.LENGTH_LONG).show();
             }
         });
@@ -111,5 +158,12 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private boolean isValidUsername(String username) {
         return username.matches("^[AKak]\\d{8}$");
+    }
+
+    private boolean isValidBirthdate(int year, int month, int day) {
+        Calendar selectedDate = Calendar.getInstance();
+        selectedDate.set(year, month, day);
+        Calendar today = Calendar.getInstance();
+        return !selectedDate.after(today);
     }
 }
