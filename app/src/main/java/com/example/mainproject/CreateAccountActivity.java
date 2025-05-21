@@ -22,6 +22,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_account_main);
 
+        // Initialize views
         etLastName = findViewById(R.id.etLastName);
         etFirstName = findViewById(R.id.etFirstName);
         etMiddleName = findViewById(R.id.etMiddleName);
@@ -37,6 +38,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
+        // Collect input
         String lastName = etLastName.getText().toString().trim();
         String firstName = etFirstName.getText().toString().trim();
         String middleName = etMiddleName.getText().toString().trim();
@@ -64,7 +66,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             return;
         }
 
-        // Prepare data
+        // Prepare data to send
         HashMap<String, String> data = new HashMap<>();
         data.put("lastname", lastName);
         data.put("firstname", firstName);
@@ -75,22 +77,21 @@ public class CreateAccountActivity extends AppCompatActivity {
         data.put("email", email);
         data.put("password", password);
 
-        // Show progress dialog
+        // Show loading
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering...");
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        // Send HTTP POST request
+        // Send POST request
         HttpRequestHelper.sendPost(REGISTER_URL, data, result -> {
             progressDialog.dismiss();
             Log.d("ServerResponse", result);
 
             try {
-                // Parse the server's response
                 JSONObject jsonResponse = new JSONObject(result);
-                String status = jsonResponse.optString("status");
-                String message = jsonResponse.optString("message");
+                String status = jsonResponse.optString("status", "error");
+                String message = jsonResponse.optString("message", "Registration completed.");
 
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
@@ -98,12 +99,10 @@ public class CreateAccountActivity extends AppCompatActivity {
                     startActivity(new Intent(this, LoginActivity.class));
                     finish();
                 } else {
-                    // Handle failure status
-                    Log.e("RegisterError", message);
+                    Log.e("RegisterError", "Registration failed: " + message);
                 }
             } catch (Exception e) {
                 Log.e("JSONParse", "Error parsing response: " + e.getMessage());
-                // Log the raw response for debugging
                 Log.e("JSONParse", "Raw response: " + result);
                 Toast.makeText(this, "Invalid server response.", Toast.LENGTH_LONG).show();
             }
