@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Main Project</string>
+    <string name="name">Name</string>
+    <string name="last">Last</string>
+    <string name="first">First</string>
 </resources>
