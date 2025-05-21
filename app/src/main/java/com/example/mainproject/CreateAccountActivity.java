@@ -54,7 +54,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                     },
                     year, month, day
             );
-            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis()); // Prevent future dates
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
             datePickerDialog.show();
         });
 
@@ -134,25 +134,30 @@ public class CreateAccountActivity extends AppCompatActivity {
         progressDialog.show();
 
         HttpRequestHelper.sendPost(REGISTER_URL, data, result -> {
-            progressDialog.dismiss();
-            Log.d("ServerResponse", result);
-            try {
-                JSONObject jsonResponse = new JSONObject(result);
-                String status = jsonResponse.optString("status", "error");
-                String message = jsonResponse.optString("message", "Registration completed.");
+            runOnUiThread(() -> {
+                progressDialog.dismiss();
+                Log.d("ServerResponse", result);
 
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                try {
+                    JSONObject jsonResponse = new JSONObject(result);
+                    String status = jsonResponse.optString("status", "error");
+                    String message = jsonResponse.optString("message", "Unknown error occurred.");
 
-                if ("success".equalsIgnoreCase(status)) {
-                    startActivity(new Intent(this, LoginActivity.class));
-                    finish();
-                } else {
-                    Log.e("RegisterError", "Registration failed: " + message);
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+                    if ("success".equalsIgnoreCase(status)) {
+                        Toast.makeText(this, "Redirecting to login...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Log.e("RegisterError", "Registration failed: " + message);
+                    }
+                } catch (Exception e) {
+                    Log.e("JSONParse", "Error parsing response: " + e.getMessage());
+                    Toast.makeText(this, "Invalid server response.", Toast.LENGTH_LONG).show();
                 }
-            } catch (Exception e) {
-                Log.e("JSONParse", "Error parsing response: " + e.getMessage());
-                Toast.makeText(this, "Invalid server response.", Toast.LENGTH_LONG).show();
-            }
+            });
         });
     }
 
