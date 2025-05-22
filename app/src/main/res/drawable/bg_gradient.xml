@@ -4,12 +4,12 @@
         <shape android:shape="rectangle">
             <gradient
                 android:startColor="#D0F0FD"
-                android:endColor="#E6F7FF"
+                android:endColor="#00008B"
                 android:angle="45"/>
 
             <gradient
                 android:startColor="@color/cardview_light_background"
-                android:endColor="@color/purple_accent"
+                android:endColor="@color/blue_accent"
                 android:angle="45"/>
 
         </shape>

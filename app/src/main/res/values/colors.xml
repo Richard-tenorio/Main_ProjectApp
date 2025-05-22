@@ -6,4 +6,5 @@
 
     <color name="dark_background">#1C1C1E</color>
     <color name="purple_accent">#6C4BA0</color>
+    <color name="blue_accent" />
 </resources>
