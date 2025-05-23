@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
@@ -18,6 +19,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     EditText etAddress, etCity, etUsername, etEmail, etPassword, etConfirmPassword;
     EditText etBirthdate;
     Button btnConfirm;
+    CheckBox cbConfirmInfo;
 
     private static final String REGISTER_URL = "http://10.0.2.2/myapp/register.php";
     private ProgressDialog progressDialog;
@@ -38,6 +40,13 @@ public class CreateAccountActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         etBirthdate = findViewById(R.id.etBirthdate);
         btnConfirm = findViewById(R.id.btnConfirm);
+        cbConfirmInfo = findViewById(R.id.cbConfirmInfo);
+
+        btnConfirm.setVisibility(View.GONE); // Hide button initially
+
+        cbConfirmInfo.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            btnConfirm.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
 
         etBirthdate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
@@ -61,6 +70,11 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
+        if (!cbConfirmInfo.isChecked()) {
+            Toast.makeText(this, "Please confirm the information by checking the box.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String lastName = etLastName.getText().toString().trim();
         String firstName = etFirstName.getText().toString().trim();
         String middleName = etMiddleName.getText().toString().trim();
@@ -72,18 +86,22 @@ public class CreateAccountActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
         String birthdateInput = etBirthdate.getText().toString().trim();
 
-        // Custom validation
         if (!lastName.matches("^[a-zA-Z]+$") || !firstName.matches("^[a-zA-Z]+$") || !middleName.matches("^[a-zA-Z]*$")) {
+            etLastName.setError("Invalid characters in name");
+            etFirstName.setError("Invalid characters in name");
+            etMiddleName.setError("Invalid characters in name");
             Toast.makeText(this, "Names must not contain numbers or special characters.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!email.endsWith("@umak.edu.ph")) {
+            etEmail.setError("Email must end with '@umak.edu.ph'");
             Toast.makeText(this, "Email must end with '@umak.edu.ph'.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (password.length() <= 8) {
+            etPassword.setError("Password must be more than 8 characters");
             Toast.makeText(this, "Password must be more than 8 characters.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -96,22 +114,26 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Invalid email format");
             Toast.makeText(this, "Invalid email address.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!password.equals(confirmPassword)) {
+            etConfirmPassword.setError("Passwords do not match");
             Toast.makeText(this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!isValidUsername(username)) {
+            etUsername.setError("Username must start with A or K followed by 8 digits");
             Toast.makeText(this, "Username must start with A or K followed by 8 digits.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String[] dateParts = birthdateInput.split("/");
         if (dateParts.length != 3) {
+            etBirthdate.setError("Invalid date format");
             Toast.makeText(this, "Invalid birthdate format.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -121,6 +143,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         int year = Integer.parseInt(dateParts[2]);
 
         if (!isValidBirthdate(year, month, day)) {
+            etBirthdate.setError("Birthdate cannot be in the future");
             Toast.makeText(this, "Birthdate cannot be in the future.", Toast.LENGTH_SHORT).show();
             return;
         }
