@@ -18,8 +18,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginBottom="24dp"
-            android:contentDescription="App Logo"
-            android:src="@mipmap/ic_launcher" />
+            android:contentDescription="University of Makati Logo"
+            android:src="@drawable/university_of_makati" />
 
         <EditText
             android:id="@+id/editUsername"
