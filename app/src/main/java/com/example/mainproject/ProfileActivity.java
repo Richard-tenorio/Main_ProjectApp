@@ -53,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "No username found", Toast.LENGTH_SHORT).show();
         }
 
+        // Just go back to MainActivity
         btnConfirm.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -69,7 +70,6 @@ public class ProfileActivity extends AppCompatActivity {
                 BufferedReader reader = null;
 
                 try {
-                    // ✅ Use 10.0.2.2 for emulator
                     String baseUrl = "http://10.0.2.2/myapp/get_profile.php";
                     String encodedUsername = URLEncoder.encode(username, "UTF-8");
                     URL url = new URL(baseUrl + "?username=" + encodedUsername);

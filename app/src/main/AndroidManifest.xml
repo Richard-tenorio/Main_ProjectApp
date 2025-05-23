@@ -30,7 +30,8 @@
         <activity android:name=".CreateAccountActivity" />
         <activity android:name=".accountSettingsActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".SubscriptionActivity"
+        <activity android:name=".SubscriptionActivity" />
+        <activity android:name=".PaymentActivity" />
             tools:ignore="MissingClass" />
 
 
