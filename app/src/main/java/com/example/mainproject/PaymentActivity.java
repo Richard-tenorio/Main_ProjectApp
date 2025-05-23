@@ -1,7 +1,9 @@
 package com.example.mainproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -16,6 +18,8 @@ public class PaymentActivity extends AppCompatActivity {
     EditText etName, etReference, etAmount;
     CheckBox cbConfirm;
     Button btnPay;
+
+    String planName, amount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +36,8 @@ public class PaymentActivity extends AppCompatActivity {
 
         // Get data from intent
         Intent intent = getIntent();
-        String planName = intent.getStringExtra("plan");
-        String amount = intent.getStringExtra("amount");
+        planName = intent.getStringExtra("planName");
+        amount = intent.getStringExtra("amount");
 
         // Display plan and amount
         tvPlanName.setText("Plan: " + (planName != null ? planName : ""));
@@ -48,7 +52,22 @@ public class PaymentActivity extends AppCompatActivity {
             } else if (!cbConfirm.isChecked()) {
                 Toast.makeText(this, "Please confirm the payment", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Payment Submitted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Confirming Payment...", Toast.LENGTH_SHORT).show();
+
+                // Simulate payment processing delay
+                new Handler().postDelayed(() -> {
+                    // Save selected plan
+                    SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+                    prefs.edit().putString("selectedPlan", planName).apply();
+
+                    Toast.makeText(this, "Payment Submitted", Toast.LENGTH_SHORT).show();
+
+                    // Return to SubscriptionActivity
+                    Intent backIntent = new Intent(PaymentActivity.this, SubscriptionActivity.class);
+                    backIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(backIntent);
+                    finish(); // Close this activity
+                }, 1500); // 1.5 seconds delay
             }
         });
     }

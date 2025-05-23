@@ -1,6 +1,7 @@
 package com.example.mainproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,7 +45,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         successImage2.setVisibility(View.GONE);
         successImage3.setVisibility(View.GONE);
 
-        // Simulated selected plan from database/local storage
+        // Get selected plan
         String selectedPlan = getSelectedPlanFromData();
 
         if (selectedPlan == null || selectedPlan.isEmpty()) {
@@ -77,9 +78,9 @@ public class SubscriptionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // Simulated selected plan method (replace with actual logic)
     private String getSelectedPlanFromData() {
-        return "1 Month Plan"; // Replace this with actual logic or value from SharedPreferences/Database
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        return prefs.getString("selectedPlan", null);
     }
 
     // Handle back button in toolbar

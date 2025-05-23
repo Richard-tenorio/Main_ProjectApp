@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="#F9F9F9">
+    android:background="#002b6c">
 
     <TextView
-       android:id="@+id/tvPlanName"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:text="Plan:"
-       android:textSize="18sp"
-       android:textStyle="bold"
-       android:paddingBottom="12dp" />
-
+        android:id="@+id/tvPlanName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Plan:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="12dp"
+        android:textColor="#FFFFFF" />
 
     <EditText
         android:id="@+id/etName"
@@ -22,7 +22,10 @@
         android:layout_height="wrap_content"
         android:hint="Enter Name"
         android:inputType="textPersonName"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:textColor="#FFFFFF"
+        android:hintTextColor="#CCCCCC"
+        android:background="@android:drawable/editbox_background" />
 
     <EditText
         android:id="@+id/etReference"
@@ -31,7 +34,10 @@
         android:layout_marginTop="16dp"
         android:hint="Enter Reference Number"
         android:inputType="text"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:textColor="#FFFFFF"
+        android:hintTextColor="#CCCCCC"
+        android:background="@android:drawable/editbox_background" />
 
     <EditText
         android:id="@+id/etAmount"
@@ -41,14 +47,20 @@
         android:enabled="false"
         android:hint="Amount"
         android:inputType="numberDecimal"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"
+        android:textColor="#FFFFFF"
+        android:hintTextColor="#CCCCCC"
+        android:background="@android:drawable/editbox_background" />
 
     <CheckBox
         android:id="@+id/cbConfirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#FFFFFF"
+        android:buttonTint="#FFFFFF"
         android:text="I confirm this payment is correct and final"
-        android:layout_marginTop="16dp" />
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/btnPay"
