@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="tvConfirmPasswordLabel" type="id" />
-    <item name="tvPlanName" type="id">planname</item>
+    <item name="tvPlanName" type="id" />
 </resources>

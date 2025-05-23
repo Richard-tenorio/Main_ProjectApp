@@ -5,14 +5,7 @@
             <gradient
                 android:startColor="#D0F0FD"
                 android:endColor="#00008B"
-                android:angle="90"/>
-
-            <gradient
-                android:startColor="@color/cardview_light_background"
-                android:endColor="@color/blue_accent"
                 android:angle="45"/>
-
         </shape>
     </item>
 </layer-list>
-
