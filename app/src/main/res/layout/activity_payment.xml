@@ -11,111 +11,160 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Title outside the box -->
         <TextView
-            android:id="@+id/tvPlanName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Plan:"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:paddingBottom="12dp" />
-
-        <!-- RadioGroup for plan selection -->
-        <RadioGroup
-            android:id="@+id/rgPlans"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/rbBasic"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Basic Plan"
-                android:textColor="#FFFFFF"
-                app:buttonTint="#FFFFFF" />
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/rbWhole"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Whole Plan"
-                android:textColor="#FFFFFF"
-                app:buttonTint="#FFFFFF" />
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/rbSponsor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Sponsor"
-                android:textColor="#FFFFFF"
-                app:buttonTint="#FFFFFF" />
-        </RadioGroup>
-
-        <!-- Name -->
-        <EditText
-            android:id="@+id/etName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="#FFFFFF"
-            android:hint="Enter Name"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:padding="10dp"
-            android:textColor="#000000" />
-
-        <!-- Reference -->
-        <EditText
-            android:id="@+id/etReference"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="#FFFFFF"
-            android:hint="Enter Reference Number"
-            android:inputType="text"
-            android:minHeight="48dp"
-            android:padding="10dp"
-            android:textColor="#000000" />
-
-        <!-- Amount -->
-        <EditText
-            android:id="@+id/etAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="#FFFFFF"
-            android:hint="Amount"
-            android:inputType="numberDecimal"
-            android:minHeight="48dp"
-            android:padding="10dp"
-            android:textColor="#000000" />
-
-        <!-- Checkbox -->
-        <CheckBox
-            android:id="@+id/cbConfirm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="I confirm this payment is correct and final"
-            android:textColor="#FFFFFF"
-            android:buttonTint="#FFFFFF"
-            android:layout_marginTop="16dp" />
-
-        <!-- Button -->
-        <Button
-            android:id="@+id/btnPay"
+            android:id="@+id/tvCreateAccountTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Proceed to Pay"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="#F5F50A"
-            android:textColor="#000000" />
+            android:layout_marginBottom="16dp"
+            android:text="Payment"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
+        <!-- Black Box Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_black_box"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:elevation="8dp">
+
+            <!-- Label: PLAN -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:text="PLAN"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- RadioGroup for plan selection -->
+            <RadioGroup
+                android:id="@+id/rgPlans"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rbBasic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Basic Plan"
+                    android:textColor="#FFFFFF"
+                    app:buttonTint="#FFFFFF" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rbWhole"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Whole Plan"
+                    android:textColor="#FFFFFF"
+                    app:buttonTint="#FFFFFF" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/rbSponsor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sponsor"
+                    android:textColor="#FFFFFF"
+                    app:buttonTint="#FFFFFF" />
+            </RadioGroup>
+
+            <!-- Label: NAME -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:text="NAME"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- Name Input -->
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="#FFFFFF"
+                android:hint="Enter Name"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:textColor="#000000" />
+
+            <!-- Label: REFERENCE NO. -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="4dp"
+                android:text="REFERENCE NO."
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- Reference Input -->
+            <EditText
+                android:id="@+id/etReference"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:hint="Enter Reference Number"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:textColor="#000000" />
+
+            <!-- Label: AMOUNT -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="4dp"
+                android:text="AMOUNT"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- Amount Input -->
+            <EditText
+                android:id="@+id/etAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:hint="Amount"
+                android:inputType="numberDecimal"
+                android:minHeight="48dp"
+                android:padding="10dp"
+                android:textColor="#000000" />
+
+            <!-- Confirmation Checkbox -->
+            <CheckBox
+                android:id="@+id/cbConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:buttonTint="#FFFFFF"
+                android:text="I confirm this payment is correct and final"
+                android:textColor="#FFFFFF" />
+
+            <!-- Pay Button -->
+            <Button
+                android:id="@+id/btnPay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="#F5F50A"
+                android:text="Proceed to Pay"
+                android:textColor="#000000" />
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
