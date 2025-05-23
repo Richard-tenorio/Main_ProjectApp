@@ -71,7 +71,7 @@ public class SubscriptionActivity extends AppCompatActivity {
     }
 
     private void launchPayment(String plan, String amount) {
-        Intent intent = new Intent(this, PaymentActivity.class);
+        Intent intent = new Intent(this, paymentActivity.class);
         intent.putExtra("planName", plan);
         intent.putExtra("amount", amount);
         startActivity(intent);

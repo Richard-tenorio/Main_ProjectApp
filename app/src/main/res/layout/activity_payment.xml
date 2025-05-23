@@ -19,23 +19,26 @@
         android:id="@+id/etName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Name" />
+        android:hint="Enter Name"
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/etReference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="Enter Reference Number"
-        android:layout_marginTop="16dp" />
+        android:minHeight="48dp" />
 
     <EditText
         android:id="@+id/etAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
         android:hint="Amount"
         android:inputType="numberDecimal"
-        android:layout_marginTop="16dp"
-        android:enabled="false" />
+        android:minHeight="48dp" />
 
     <Button
         android:id="@+id/btnPay"

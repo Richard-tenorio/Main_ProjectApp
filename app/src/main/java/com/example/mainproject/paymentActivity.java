@@ -1,4 +1,15 @@
-public class PaymentActivity extends AppCompatActivity {
+package com.example.mainproject;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class paymentActivity extends AppCompatActivity {
 
     TextView tvPlanName;
     EditText etName, etReference, etAmount;
@@ -17,7 +28,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         // Get plan details from intent
         Intent intent = getIntent();
-        String planName = intent.getStringExtra("planName");
+        String planName = intent.getStringExtra("plan");   // make sure key matches subscription intent
         String amount = intent.getStringExtra("amount");
 
         tvPlanName.setText("Plan: " + planName);
