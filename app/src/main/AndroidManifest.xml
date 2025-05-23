@@ -32,7 +32,6 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SubscriptionActivity" />
         <activity android:name=".PaymentActivity" />
-            tools:ignore="MissingClass" />
 
 
     </application>

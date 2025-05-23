@@ -70,10 +70,9 @@ public class SubscriptionActivity extends AppCompatActivity {
         box3.setOnClickListener(v -> launchPayment("Whole Semester Plan", "300"));
     }
 
-    // Launch PaymentActivity with plan data
     private void launchPayment(String plan, String amount) {
         Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra("plan", plan);
+        intent.putExtra("planName", plan);
         intent.putExtra("amount", amount);
         startActivity(intent);
     }
