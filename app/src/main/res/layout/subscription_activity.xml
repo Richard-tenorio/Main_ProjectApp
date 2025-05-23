@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -28,7 +27,6 @@
         android:background="#D3D3D3"
         android:gravity="center" />
 
-    <!-- ScrollView with plan options -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -38,148 +36,66 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
 
-            <!-- Plan Box Template -->
-            <!-- Box 1 -->
-            <LinearLayout
+            <!-- Plan Button 1 -->
+            <Button
                 android:id="@+id/box1"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical|start"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:drawableStart="@drawable/ic_launcher_foreground"
+                android:drawablePadding="12dp"
+                android:backgroundTint="#FFFFFF"
+                android:elevation="4dp"
+                android:text="1 Month Plan\nAccess to core features"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:lines="2"
+                android:textAlignment="viewStart" />
 
-                <ImageView
-                    android:id="@+id/successImage1"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_check_circle"
-                    android:visibility="gone"
-                    android:layout_marginBottom="4dp"
-                    android:contentDescription="Selected plan indicator" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:orientation="horizontal"
-                    android:background="#FFFFFF"
-                    android:elevation="4dp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="72dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_launcher_foreground"
-                        android:scaleType="centerCrop"
-                        android:contentDescription="Plan image" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="1 Month Plan\nAccess to core features"
-                        android:textSize="16sp"
-                        android:paddingStart="12dp"
-                        android:gravity="center_vertical" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Box 2 -->
-            <LinearLayout
+            <!-- Plan Button 2 -->
+            <Button
                 android:id="@+id/box2"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical|start"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:drawableStart="@drawable/ic_launcher_foreground"
+                android:drawablePadding="12dp"
+                android:backgroundTint="#FFFFFF"
+                android:elevation="4dp"
+                android:text="Sponsored\nOnly for Sponsored Students"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:lines="2"
+                android:textAlignment="viewStart" />
 
-                <ImageView
-                    android:id="@+id/successImage2"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_check_circle"
-                    android:visibility="gone"
-                    android:layout_marginBottom="4dp"
-                    android:contentDescription="Selected plan indicator" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:orientation="horizontal"
-                    android:background="#FFFFFF"
-                    android:elevation="4dp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="72dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_launcher_foreground"
-                        android:scaleType="centerCrop"
-                        android:contentDescription="Plan image" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Sponsored\nOnly for Sponsored Students"
-                        android:textSize="16sp"
-                        android:paddingStart="12dp"
-                        android:gravity="center_vertical" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Box 3 -->
-            <LinearLayout
+            <!-- Plan Button 3 -->
+            <Button
                 android:id="@+id/box3"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:id="@+id/successImage3"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_check_circle"
-                    android:visibility="gone"
-                    android:layout_marginBottom="4dp"
-                    android:contentDescription="Selected plan indicator" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:orientation="horizontal"
-                    android:background="#FFFFFF"
-                    android:elevation="4dp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="72dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_launcher_foreground"
-                        android:scaleType="centerCrop"
-                        android:contentDescription="Plan image" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="Whole Semester Plan\nAll the Time"
-                        android:textSize="16sp"
-                        android:paddingStart="12dp"
-                        android:gravity="center_vertical" />
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_height="100dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical|start"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:drawableStart="@drawable/ic_launcher_foreground"
+                android:drawablePadding="12dp"
+                android:backgroundTint="#FFFFFF"
+                android:elevation="4dp"
+                android:text="Whole Semester Plan\nAll the Time"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:lines="2"
+                android:textAlignment="viewStart" />
 
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
