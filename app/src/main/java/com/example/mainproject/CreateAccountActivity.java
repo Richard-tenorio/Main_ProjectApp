@@ -72,6 +72,22 @@ public class CreateAccountActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
         String birthdateInput = etBirthdate.getText().toString().trim();
 
+        // Custom validation
+        if (!lastName.matches("^[a-zA-Z]+$") || !firstName.matches("^[a-zA-Z]+$") || !middleName.matches("^[a-zA-Z]*$")) {
+            Toast.makeText(this, "Names must not contain numbers or special characters.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!email.endsWith("@umak.edu.ph")) {
+            Toast.makeText(this, "Email must end with '@umak.edu.ph'.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.length() <= 8) {
+            Toast.makeText(this, "Password must be more than 8 characters.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (lastName.isEmpty() || firstName.isEmpty() || username.isEmpty()
                 || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()
                 || address.isEmpty() || city.isEmpty() || birthdateInput.isEmpty()) {
@@ -81,11 +97,6 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(this, "Invalid email address.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (password.length() < 6) {
-            Toast.makeText(this, "Password must be at least 6 characters.", Toast.LENGTH_SHORT).show();
             return;
         }
 

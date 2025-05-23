@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     String selectedDate = "";
     SharedPreferences sharedPreferences;
 
-    // Define hardcoded daily schedule
     List<ScheduledEvent> scheduledEvents = Arrays.asList(
             new ScheduledEvent("09:00", "Meeting"),
             new ScheduledEvent("12:00", "Lunch"),
@@ -55,12 +55,30 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("MySchedules", MODE_PRIVATE);
 
-        // Show today's schedule by default
-        updateScheduleView();
+        updateScheduleView(); // Show today's schedule by default
 
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
             txtSelectedDate.setText("Selected Date: " + selectedDate);
+
+            // Validate past date
+            Calendar selectedCal = Calendar.getInstance();
+            selectedCal.set(year, month, dayOfMonth, 0, 0, 0);
+            selectedCal.set(Calendar.MILLISECOND, 0);
+
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            if (selectedCal.before(today)) {
+                Toast.makeText(this, "You selected a past date.", Toast.LENGTH_SHORT).show();
+                btnCustomizeCalendar.setEnabled(false);
+            } else {
+                btnCustomizeCalendar.setEnabled(true);
+            }
+
             updateScheduleView();
         });
 
@@ -152,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // Inner class for scheduled events
     public static class ScheduledEvent {
         public String time;
         public String description;

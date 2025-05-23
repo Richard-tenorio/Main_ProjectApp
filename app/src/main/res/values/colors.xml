@@ -7,4 +7,7 @@
     <color name="dark_background">#1C1C1E</color>
     <color name="purple_accent">#6C4BA0</color>
     <color name="blue_accent" />
+
+    <color name="dark_blue_start">#2C3E50</color>  <!-- lighter dark blue -->
+    <color name="dark_blue_end">#34495E</color>    <!-- soft gradient end -->
 </resources>
