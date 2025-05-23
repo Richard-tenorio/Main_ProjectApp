@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 public class SubscriptionActivity extends AppCompatActivity {
 
     private TextView tvSelectedPlan;
-    private ImageView successImage1, successImage2, successImage3;
-    private LinearLayout box1, box2, box3;
+    private Button box1, box2, box3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,55 +23,34 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         setupToolbar();
         bindViews();
-        setupSelectedPlan();
+        displaySelectedPlan();
         setupClickListeners();
     }
 
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle("Subscription");
-            }
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Subscription");
         }
     }
 
     private void bindViews() {
         tvSelectedPlan = findViewById(R.id.tvSelectedPlan);
-        successImage1 = findViewById(R.id.successImage1);
-        successImage2 = findViewById(R.id.successImage2);
-        successImage3 = findViewById(R.id.successImage3);
         box1 = findViewById(R.id.box1);
         box2 = findViewById(R.id.box2);
         box3 = findViewById(R.id.box3);
-
-        // Hide all selection icons initially
-        successImage1.setVisibility(View.GONE);
-        successImage2.setVisibility(View.GONE);
-        successImage3.setVisibility(View.GONE);
     }
 
-    private void setupSelectedPlan() {
-        String selectedPlan = getSelectedPlanFromPrefs();
+    private void displaySelectedPlan() {
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        String selectedPlan = prefs.getString("selectedPlan", null);
 
         if (selectedPlan == null || selectedPlan.isEmpty()) {
             tvSelectedPlan.setText("You don't have any plan");
         } else {
             tvSelectedPlan.setText("Your current plan: " + selectedPlan);
-
-            switch (selectedPlan) {
-                case "1 Month Plan":
-                    successImage1.setVisibility(View.VISIBLE);
-                    break;
-                case "Sponsored":
-                    successImage2.setVisibility(View.VISIBLE);
-                    break;
-                case "Whole Semester Plan":
-                    successImage3.setVisibility(View.VISIBLE);
-                    break;
-            }
         }
     }
 
@@ -90,9 +67,10 @@ public class SubscriptionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private String getSelectedPlanFromPrefs() {
-        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        return prefs.getString("selectedPlan", null);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        displaySelectedPlan();  // Refresh the selected plan when returning
     }
 
     // Handle toolbar back button

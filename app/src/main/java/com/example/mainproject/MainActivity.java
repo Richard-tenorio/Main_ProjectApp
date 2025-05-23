@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Enter Schedule for " + selectedDate);
 
         final EditText input = new EditText(this);
-        input.setHint("E.g., \u2022 Meeting at 10AM\n\u2022 Call at 3PM");
+        input.setHint("Set your Preferred Sets and Reps");
         input.setMinLines(4);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.setGravity(Gravity.TOP);

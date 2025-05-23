@@ -1,84 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
     android:background="#002b6c">
 
-    <TextView
-        android:id="@+id/tvPlanName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Plan:"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:paddingBottom="12dp"
-        android:textColor="#FFFFFF" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Name"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:textColor="#FFFFFF" />
+        <TextView
+            android:id="@+id/tvPlanName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Plan:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:paddingBottom="12dp" />
 
-    <!-- Reference Number Field -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Enter Reference Number"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- RadioGroup for plan selection -->
+        <RadioGroup
+            android:id="@+id/rgPlans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
-        <com.google.android.material.textfield.TextInputEditText
+            <RadioButton
+                android:id="@+id/rbBasic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Basic Plan"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF" />
+
+            <RadioButton
+                android:id="@+id/rbWhole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Whole Plan"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF" />
+
+            <RadioButton
+                android:id="@+id/rbSponsor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sponsor"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#FFFFFF" />
+        </RadioGroup>
+
+        <!-- Name -->
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="#FFFFFF"
+            android:hint="Enter Name"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:padding="10dp"
+            android:textColor="#000000" />
+
+        <!-- Reference -->
+        <EditText
             android:id="@+id/etReference"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:hint="Enter Reference Number"
             android:inputType="text"
             android:minHeight="48dp"
-            android:textColor="#FFFFFF" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:padding="10dp"
+            android:textColor="#000000" />
 
-    <!-- Amount Field (Disabled) -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="Amount"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-        <com.google.android.material.textfield.TextInputEditText
+        <!-- Amount -->
+        <EditText
             android:id="@+id/etAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
+            android:layout_marginTop="16dp"
+            android:background="#FFFFFF"
+            android:hint="Amount"
             android:inputType="numberDecimal"
             android:minHeight="48dp"
-            android:textColor="#FFFFFF" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:padding="10dp"
+            android:textColor="#000000" />
 
-    <CheckBox
-        android:id="@+id/cbConfirm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#FFFFFF"
-        android:buttonTint="#FFFFFF"
-        android:text="I confirm this payment is correct and final"
-        android:textColor="#FFFFFF" />
+        <!-- Checkbox -->
+        <CheckBox
+            android:id="@+id/cbConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I confirm this payment is correct and final"
+            android:textColor="#FFFFFF"
+            android:buttonTint="#FFFFFF"
+            android:layout_marginTop="16dp" />
 
-    <Button
-        android:id="@+id/btnPay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#F5F50A"
-        android:layout_gravity="center_horizontal"
-        android:text="Proceed to Pay"
-        android:textColor="#000000" />
+        <!-- Button -->
+        <Button
+            android:id="@+id/btnPay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Proceed to Pay"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#F5F50A"
+            android:textColor="#000000" />
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

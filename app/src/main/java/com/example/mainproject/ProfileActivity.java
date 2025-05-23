@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +22,8 @@ import java.net.URLEncoder;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    EditText etLastName, etFirstName, etMiddleName, etAddress, etCity,
-            etUsername, etEmail;
+    TextView tvLastName, tvFirstName, tvMiddleName, tvAddress, tvCity,
+            tvUsername, tvEmail, tvBirthdate;
     Button btnConfirm;
 
     SharedPreferences sharedPreferences;
@@ -32,18 +32,20 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile); // Ensure this matches the XML file name
 
-        // Initialize views
-        etLastName = findViewById(R.id.etLastName);
-        etFirstName = findViewById(R.id.etFirstName);
-        etMiddleName = findViewById(R.id.etMiddleName);
-        etAddress = findViewById(R.id.etAddress);
-        etCity = findViewById(R.id.etCity);
-        etUsername = findViewById(R.id.etUsername);
-        etEmail = findViewById(R.id.etEmail);
+        // Initialize TextViews
+        tvLastName = findViewById(R.id.tvLastName);
+        tvFirstName = findViewById(R.id.tvFirstName);
+        tvMiddleName = findViewById(R.id.tvMiddleName);
+        tvAddress = findViewById(R.id.tvAddress);
+        tvCity = findViewById(R.id.tvCity);
+        tvUsername = findViewById(R.id.tvUsername);
+        tvEmail = findViewById(R.id.tvEmail);
+        tvBirthdate = findViewById(R.id.tvBirthdate);
         btnConfirm = findViewById(R.id.btnConfirm);
 
+        // Get username from SharedPreferences
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
 
@@ -53,11 +55,8 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "No username found", Toast.LENGTH_SHORT).show();
         }
 
-        // Just go back to MainActivity
         btnConfirm.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            startActivity(new Intent(ProfileActivity.this, MainActivity.class));
             finish();
         });
     }
@@ -116,13 +115,15 @@ public class ProfileActivity extends AppCompatActivity {
                         return;
                     }
 
-                    etLastName.setText(json.optString("lastname", ""));
-                    etFirstName.setText(json.optString("firstname", ""));
-                    etMiddleName.setText(json.optString("middlename", ""));
-                    etAddress.setText(json.optString("address", ""));
-                    etCity.setText(json.optString("city", ""));
-                    etUsername.setText(json.optString("username", ""));
-                    etEmail.setText(json.optString("email", ""));
+                    // Set the data to TextViews
+                    tvLastName.setText(json.optString("lastname", ""));
+                    tvFirstName.setText(json.optString("firstname", ""));
+                    tvMiddleName.setText(json.optString("middlename", ""));
+                    tvAddress.setText(json.optString("address", ""));
+                    tvCity.setText(json.optString("city", ""));
+                    tvUsername.setText(json.optString("username", ""));
+                    tvEmail.setText(json.optString("email", ""));
+                    tvBirthdate.setText(json.optString("birthdate", ""));
 
                 } catch (Exception e) {
                     e.printStackTrace();

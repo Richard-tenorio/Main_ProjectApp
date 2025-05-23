@@ -43,32 +43,33 @@ public class PaymentActivity extends AppCompatActivity {
         tvPlanName.setText("Plan: " + (planName != null ? planName : ""));
         etAmount.setText(amount != null ? amount : "");
 
-        btnPay.setOnClickListener(v -> {
-            String name = etName.getText().toString().trim();
-            String reference = etReference.getText().toString().trim();
+        btnPay.setOnClickListener(v -> processPayment());
+    }
 
-            if (name.isEmpty() || reference.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-            } else if (!cbConfirm.isChecked()) {
-                Toast.makeText(this, "Please confirm the payment", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Confirming Payment...", Toast.LENGTH_SHORT).show();
+    private void processPayment() {
+        String name = etName.getText().toString().trim();
+        String reference = etReference.getText().toString().trim();
 
-                // Simulate payment processing delay
-                new Handler().postDelayed(() -> {
-                    // Save selected plan
-                    SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-                    prefs.edit().putString("selectedPlan", planName).apply();
+        if (name.isEmpty() || reference.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        } else if (!cbConfirm.isChecked()) {
+            Toast.makeText(this, "Please confirm the payment", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Confirming Payment...", Toast.LENGTH_SHORT).show();
 
-                    Toast.makeText(this, "Payment Submitted", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> {
+                // Save selected plan
+                SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+                prefs.edit().putString("selectedPlan", planName).apply();
 
-                    // Return to SubscriptionActivity
-                    Intent backIntent = new Intent(PaymentActivity.this, SubscriptionActivity.class);
-                    backIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(backIntent);
-                    finish(); // Close this activity
-                }, 1500); // 1.5 seconds delay
-            }
-        });
+                Toast.makeText(this, "Payment Submitted", Toast.LENGTH_SHORT).show();
+
+                // Go back to SubscriptionActivity
+                Intent backIntent = new Intent(PaymentActivity.this, SubscriptionActivity.class);
+                backIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(backIntent);
+                finish();
+            }, 1500);
+        }
     }
 }
