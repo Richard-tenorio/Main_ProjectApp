@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +22,8 @@ import java.net.URLEncoder;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView tvLastName, tvFirstName, tvMiddleName, tvAddress, tvCity,
-            tvUsername, tvEmail;
+    EditText etLastName, etFirstName, etMiddleName, etAddress, etCity,
+            etUsername, etEmail;
     Button btnConfirm;
 
     SharedPreferences sharedPreferences;
@@ -35,13 +35,13 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         // Initialize views
-        tvLastName = findViewById(R.id.tvLastName);
-        tvFirstName = findViewById(R.id.tvFirstName);
-        tvMiddleName = findViewById(R.id.tvMiddleName);
-        tvAddress = findViewById(R.id.tvAddress);
-        tvCity = findViewById(R.id.tvCity);
-        tvUsername = findViewById(R.id.tvUsername);
-        tvEmail = findViewById(R.id.tvEmail);
+        etLastName = findViewById(R.id.etLastName);
+        etFirstName = findViewById(R.id.etFirstName);
+        etMiddleName = findViewById(R.id.etMiddleName);
+        etAddress = findViewById(R.id.etAddress);
+        etCity = findViewById(R.id.etCity);
+        etUsername = findViewById(R.id.etUsername);
+        etEmail = findViewById(R.id.etEmail);
         btnConfirm = findViewById(R.id.btnConfirm);
 
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
@@ -69,8 +69,11 @@ public class ProfileActivity extends AppCompatActivity {
                 BufferedReader reader = null;
 
                 try {
+                    // ✅ Use 10.0.2.2 for emulator
                     String baseUrl = "http://10.0.2.2/myapp/get_profile.php";
-                    URL url = new URL(baseUrl + "?username=" + URLEncoder.encode(username, "UTF-8"));
+                    String encodedUsername = URLEncoder.encode(username, "UTF-8");
+                    URL url = new URL(baseUrl + "?username=" + encodedUsername);
+
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setConnectTimeout(10000);
@@ -88,7 +91,6 @@ public class ProfileActivity extends AppCompatActivity {
                     } else {
                         return "{\"error\":\"Server error: " + responseCode + "\"}";
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     return "{\"error\":\"Exception: " + e.getMessage() + "\"}";
@@ -108,22 +110,23 @@ public class ProfileActivity extends AppCompatActivity {
             protected void onPostExecute(String result) {
                 try {
                     JSONObject json = new JSONObject(result);
+
                     if (json.has("error")) {
                         Toast.makeText(ProfileActivity.this, json.getString("error"), Toast.LENGTH_LONG).show();
                         return;
                     }
 
-                    tvLastName.setText(json.getString("lastname"));
-                    tvFirstName.setText(json.getString("firstname"));
-                    tvMiddleName.setText(json.getString("middlename"));
-                    tvAddress.setText(json.getString("address"));
-                    tvCity.setText(json.getString("city"));
-                    tvUsername.setText(json.getString("username"));
-                    tvEmail.setText(json.getString("email"));
+                    etLastName.setText(json.optString("lastname", ""));
+                    etFirstName.setText(json.optString("firstname", ""));
+                    etMiddleName.setText(json.optString("middlename", ""));
+                    etAddress.setText(json.optString("address", ""));
+                    etCity.setText(json.optString("city", ""));
+                    etUsername.setText(json.optString("username", ""));
+                    etEmail.setText(json.optString("email", ""));
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileActivity.this, "Parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }.execute();
