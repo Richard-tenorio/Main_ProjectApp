@@ -31,7 +31,6 @@ public class SubscriptionActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("Subscription");
         }
-        // Set toolbar title color explicitly to white for visibility
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
     }
 
@@ -41,20 +40,13 @@ public class SubscriptionActivity extends AppCompatActivity {
     }
 
     private void displaySelectedPlan() {
-        String selectedPlan = getSharedPreferences("AppPrefs", MODE_PRIVATE).getString("selectedPlan", null);
-
-        if (selectedPlan == null || selectedPlan.isEmpty()) {
-            tvSelectedPlan.setText("You don't have any plan");
-        } else {
-            tvSelectedPlan.setText("Your current plan: " + selectedPlan);
-        }
+        // Removed SharedPreferences reading.
+        // Just display a static message:
+        tvSelectedPlan.setText("You don't have any plan");
     }
 
     private void setupClickListener() {
-        btnGetPlan.setOnClickListener(v -> {
-            // Launch PaymentActivity without preset data; payment activity will handle choices
-            launchPayment();
-        });
+        btnGetPlan.setOnClickListener(v -> launchPayment());
     }
 
     private void launchPayment() {
@@ -65,7 +57,7 @@ public class SubscriptionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        displaySelectedPlan();
+        displaySelectedPlan(); // Always shows default message now.
     }
 
     @Override
