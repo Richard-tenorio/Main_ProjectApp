@@ -42,6 +42,11 @@ public class CreateAccountActivity extends AppCompatActivity {
         btnConfirm = findViewById(R.id.btnConfirm);
         cbConfirmInfo = findViewById(R.id.cbConfirmInfo);
 
+        // Capitalize first letter of each name field
+        setCapitalizationWatcher(etFirstName);
+        setCapitalizationWatcher(etLastName);
+        setCapitalizationWatcher(etMiddleName);
+
         btnConfirm.setVisibility(View.GONE); // Hide button initially
 
         cbConfirmInfo.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -67,6 +72,36 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
         btnConfirm.setOnClickListener(v -> registerUser());
+    }
+
+    private void setCapitalizationWatcher(EditText editText) {
+        editText.addTextChangedListener(new android.text.TextWatcher() {
+            private String previous = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                previous = s.toString();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(android.text.Editable editable) {
+                String text = editable.toString();
+                if (!text.equals(previous)) {
+                    if (!text.isEmpty()) {
+                        String capitalized = text.substring(0, 1).toUpperCase() + text.substring(1);
+                        if (!capitalized.equals(text)) {
+                            editText.removeTextChangedListener(this);
+                            editText.setText(capitalized);
+                            editText.setSelection(capitalized.length());
+                            editText.addTextChangedListener(this);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void registerUser() {

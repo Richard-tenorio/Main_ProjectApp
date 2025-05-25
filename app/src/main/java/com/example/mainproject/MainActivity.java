@@ -14,9 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,12 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     String selectedDate = "";
     SharedPreferences sharedPreferences;
-
-    List<ScheduledEvent> scheduledEvents = Arrays.asList(
-            new ScheduledEvent("09:00", "Meeting"),
-            new ScheduledEvent("12:00", "Lunch"),
-            new ScheduledEvent("16:00", "Report Submission")
-    );
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -126,20 +118,35 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateTimelineView() {
-        LocalTime now = LocalTime.now();
+        String scheduleText = sharedPreferences.getString(selectedDate, "");
         StringBuilder timeline = new StringBuilder();
 
-        for (ScheduledEvent event : scheduledEvents) {
-            if (now.isAfter(event.getTime())) {
-                timeline.append("\u2022 ").append(event.time).append(" - ").append(event.description).append("\n");
+        if (!scheduleText.isEmpty()) {
+            String[] lines = scheduleText.split("\n");
+            LocalTime now = LocalTime.now();
+
+            for (String line : lines) {
+                if (line.matches("^\\d{2}:\\d{2}.*")) {
+                    String[] parts = line.split(" ", 2);
+                    try {
+                        LocalTime eventTime = LocalTime.parse(parts[0]);
+                        if (eventTime.isBefore(now)) {
+                            timeline.append("\u2022 ").append(line).append("\n");
+                        }
+                    } catch (Exception e) {
+                        // skip invalid time format
+                    }
+                }
             }
+
+            if (timeline.length() == 0) {
+                timeline.append("No past events yet.");
+            }
+        } else {
+            timeline.append("No events for timeline.");
         }
 
-        if (timeline.length() == 0) {
-            timeline.append("No past events yet.");
-        }
-
-        txtTimeline.setText("Timeline:\n" + timeline);
+        txtTimeline.setText("Timeline:\n" + timeline.toString());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -148,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Enter Schedule for " + selectedDate);
 
         final EditText input = new EditText(this);
-        input.setHint("Set your Preferred Sets and Reps");
+        input.setHint("Format:\nHH:mm Task\nExample:\n09:00 Warm-up");
         input.setMinLines(4);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.setGravity(Gravity.TOP);
@@ -167,20 +174,5 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         builder.show();
-    }
-
-    public static class ScheduledEvent {
-        public String time;
-        public String description;
-
-        public ScheduledEvent(String time, String description) {
-            this.time = time;
-            this.description = description;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        public LocalTime getTime() {
-            return LocalTime.parse(time); // Format must be HH:mm
-        }
     }
 }
