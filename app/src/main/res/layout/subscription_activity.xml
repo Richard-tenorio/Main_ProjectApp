@@ -12,9 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#002b6c"
-        android:title="Subscription"
-        android:titleTextColor="#FFFFFF"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:titleTextColor="#FFFFFF"/>
 
     <!-- Selected Plan TextView -->
     <TextView

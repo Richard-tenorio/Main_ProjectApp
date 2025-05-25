@@ -29,9 +29,10 @@ public class SubscriptionActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Subscription");
         }
+        // Set toolbar title color explicitly to white for visibility
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
     }
 
     private void bindViews() {
