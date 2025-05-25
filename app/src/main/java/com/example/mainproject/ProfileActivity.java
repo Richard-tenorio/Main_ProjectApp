@@ -2,7 +2,6 @@ package com.example.mainproject;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Link layout views
+        // Link layout views (TextView only, no EditText!)
         tvLastName = findViewById(R.id.tvLastName);
         tvFirstName = findViewById(R.id.tvFirstName);
         tvMiddleName = findViewById(R.id.tvMiddleName);
@@ -45,7 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
         tvBirthdate = findViewById(R.id.tvBirthdate);
         btnConfirm = findViewById(R.id.btnConfirm);
 
-        // Load username from SharedPreferences
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
 
@@ -57,7 +55,6 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "No username found in SharedPreferences", Toast.LENGTH_SHORT).show();
         }
 
-        // Confirm button returns to MainActivity
         btnConfirm.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, MainActivity.class));
             finish();
@@ -65,7 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void fetchProfile(String username) {
-        new AsyncTask<Void, Void, String>() {
+        new android.os.AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
                 HttpURLConnection conn = null;

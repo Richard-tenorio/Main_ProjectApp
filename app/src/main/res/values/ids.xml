@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="tvConfirmPasswordLabel" type="id" />
     <item name="tvPlanName" type="id" />
+    <item name="tvFullName" type="id" />
+    <item name="btnProfile" type="id" />
+    <item name="btnLogout" type="id" />
 </resources>
