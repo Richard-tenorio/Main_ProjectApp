@@ -25,7 +25,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
     private TextView tvSelectedPlan;
     private Button btnGetPlan;
-    private Integer userId = null;
+    private Integer id = null;  // changed from userId to id
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +45,10 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
-        // ✅ Check if user_id exists at all
-        if (prefs.contains("user_id")) {
-            userId = prefs.getInt("user_id", 0);
-            fetchUserPlan(userId);
+        // Check if id exists in SharedPreferences
+        if (prefs.contains("id")) {
+            id = prefs.getInt("id", 0);
+            fetchUserPlan(id);
         } else {
             tvSelectedPlan.setText("You don't have an active plan yet.");
         }
@@ -59,13 +59,13 @@ public class SubscriptionActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchUserPlan(int userId) {
+    private void fetchUserPlan(int id) {
         new AsyncTask<Integer, Void, String>() {
             @Override
             protected String doInBackground(Integer... params) {
                 int uid = params[0];
                 try {
-                    String urlStr = "http://10.0.2.2/myapp/subscription.php?user_id=" + URLEncoder.encode(String.valueOf(uid), "UTF-8");
+                    String urlStr = "http://10.0.2.2/myapp/subscription.php?id=" + URLEncoder.encode(String.valueOf(uid), "UTF-8");
                     URL url = new URL(urlStr);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
@@ -103,7 +103,7 @@ public class SubscriptionActivity extends AppCompatActivity {
                     tvSelectedPlan.setText("Your current plan: " + result);
                 }
             }
-        }.execute(userId);
+        }.execute(id);
     }
 
     @Override
@@ -111,21 +111,21 @@ public class SubscriptionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PAYMENT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            int returnedUserId = data.getIntExtra("user_id", 0);
+            int returnedId = data.getIntExtra("id", 0);
 
-            if (returnedUserId > 0) {
-                userId = returnedUserId;
+            if (returnedId > 0) {
+                id = returnedId;
 
-                // ✅ Save new user_id after payment
+                // Save new id after payment
                 SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("user_id", userId);
+                editor.putInt("id", id);
                 editor.apply();
 
-                fetchUserPlan(userId);
+                fetchUserPlan(id);
                 Toast.makeText(this, "Plan updated after payment", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "No user ID returned after payment", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No ID returned after payment", Toast.LENGTH_SHORT).show();
             }
         }
     }
