@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -32,9 +32,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile); // Ensure this matches the XML file name
+        setContentView(R.layout.activity_profile);
 
-        // Initialize TextViews
+        // Link layout views
         tvLastName = findViewById(R.id.tvLastName);
         tvFirstName = findViewById(R.id.tvFirstName);
         tvMiddleName = findViewById(R.id.tvMiddleName);
@@ -45,16 +45,19 @@ public class ProfileActivity extends AppCompatActivity {
         tvBirthdate = findViewById(R.id.tvBirthdate);
         btnConfirm = findViewById(R.id.btnConfirm);
 
-        // Get username from SharedPreferences
+        // Load username from SharedPreferences
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String username = sharedPreferences.getString("username", "");
+
+        Log.d("ProfileActivity", "Loaded username: " + username);
 
         if (!TextUtils.isEmpty(username)) {
             fetchProfile(username);
         } else {
-            Toast.makeText(this, "No username found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No username found in SharedPreferences", Toast.LENGTH_SHORT).show();
         }
 
+        // Confirm button returns to MainActivity
         btnConfirm.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, MainActivity.class));
             finish();
@@ -69,39 +72,34 @@ public class ProfileActivity extends AppCompatActivity {
                 BufferedReader reader = null;
 
                 try {
-                    String baseUrl = "http://10.0.2.2/myapp/get_profile.php";
+                    String baseUrl = "http://10.0.2.2/myapp/profile.php";
                     String encodedUsername = URLEncoder.encode(username, "UTF-8");
                     URL url = new URL(baseUrl + "?username=" + encodedUsername);
-
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(10000);
-                    conn.setReadTimeout(10000);
+                    conn.setConnectTimeout(5000);
+                    conn.setReadTimeout(5000);
 
                     int responseCode = conn.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        StringBuilder result = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            result.append(line);
-                        }
-                        return result.toString();
-                    } else {
-                        return "{\"error\":\"Server error: " + responseCode + "\"}";
+                    if (responseCode != HttpURLConnection.HTTP_OK) {
+                        return "{\"error\":\"Server returned response code: " + responseCode + "\"}";
                     }
+
+                    reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+                    return result.toString();
+
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    return "{\"error\":\"Exception: " + e.getMessage() + "\"}";
+                    return "{\"error\":\"" + e.getMessage() + "\"}";
                 } finally {
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException ignored) {}
-                    }
-                    if (conn != null) {
-                        conn.disconnect();
-                    }
+                    try {
+                        if (reader != null) reader.close();
+                        if (conn != null) conn.disconnect();
+                    } catch (Exception ignored) {}
                 }
             }
 
@@ -111,11 +109,10 @@ public class ProfileActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(result);
 
                     if (json.has("error")) {
-                        Toast.makeText(ProfileActivity.this, json.getString("error"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ProfileActivity.this, "Server error: " + json.getString("error"), Toast.LENGTH_LONG).show();
                         return;
                     }
 
-                    // Set the data to TextViews
                     tvLastName.setText(json.optString("lastname", ""));
                     tvFirstName.setText(json.optString("firstname", ""));
                     tvMiddleName.setText(json.optString("middlename", ""));
@@ -126,8 +123,7 @@ public class ProfileActivity extends AppCompatActivity {
                     tvBirthdate.setText(json.optString("birthdate", ""));
 
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(ProfileActivity.this, "Parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ProfileActivity.this, "JSON parsing error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }.execute();

@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        topArea = findViewById(R.id.topArea);
         txtSchedule = findViewById(R.id.txtSchedule);
         txtTimeline = findViewById(R.id.txtTimeline);
         txtSelectedDate = findViewById(R.id.txtSelectedDate);

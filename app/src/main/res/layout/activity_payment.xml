@@ -55,7 +55,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Basic Plan"
+                    android:text="Basic"
                     android:textColor="#FFFFFF"
                     app:buttonTint="#FFFFFF" />
 
@@ -64,7 +64,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Whole Plan"
+                    android:text="Whole"
                     android:textColor="#FFFFFF"
                     app:buttonTint="#FFFFFF" />
 

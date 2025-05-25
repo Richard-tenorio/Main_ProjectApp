@@ -1,19 +1,19 @@
 package com.example.mainproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-
 import org.json.JSONObject;
-
 import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText editUsername, editPassword;
     Button btnLogin, btnCreateAccount;
+    private static final String PREF_NAME = "UserProfile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +38,22 @@ public class LoginActivity extends AppCompatActivity {
 
                 HttpRequestHelper.sendPost(url, loginData, result -> {
                     try {
-                        Log.d("SERVER_RESPONSE", result); // Log full server response
+                        Log.d("SERVER_RESPONSE", result);
 
                         if (result != null && !result.isEmpty()) {
                             JSONObject response = new JSONObject(result);
 
                             if (response.has("status") && response.getString("status").equalsIgnoreCase("success")) {
                                 Toast.makeText(this, response.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                // Save username to SharedPreferences
+                                SharedPreferences sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("username", username);
+                                editor.apply();
+
                                 startActivity(new Intent(this, MainActivity.class));
-                                finish(); // Close login screen
+                                finish();
                             } else {
                                 String message = response.has("message") ? response.getString("message") : "Login failed.";
                                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -56,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     } catch (Exception e) {
                         Log.e("LoginError", "Error parsing JSON: " + e.getMessage());
-                        Log.e("LoginError", "Raw response: " + result); // 💡 This helps debugging malformed JSON
+                        Log.e("LoginError", "Raw response: " + result);
                         Toast.makeText(this, "Login failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
