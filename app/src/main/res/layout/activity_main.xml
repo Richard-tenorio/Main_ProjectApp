@@ -8,7 +8,6 @@
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <!-- Toolbox Area (Blue header) -->
     <LinearLayout
         android:id="@+id/toolboxArea"
         android:layout_width="0dp"
@@ -43,7 +42,6 @@
             android:textColor="#000000" />
     </LinearLayout>
 
-    <!-- ScrollView Section -->
     <ScrollView
         android:id="@+id/scrollArea"
         android:layout_width="0dp"
@@ -60,7 +58,6 @@
             android:padding="16dp"
             android:background="#F2F2F2">
 
-            <!-- Welcome Text -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,14 +66,12 @@
                 android:textStyle="bold"
                 android:paddingBottom="12dp" />
 
-            <!-- Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#CCCCCC"
                 android:layout_marginBottom="8dp" />
 
-            <!-- White Box Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,7 +81,6 @@
                 android:elevation="4dp"
                 android:layout_marginBottom="16dp">
 
-                <!-- Schedule Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -101,7 +95,6 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="8dp" />
 
-                <!-- Timeline Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -118,7 +111,6 @@
                     android:textColor="#333333"
                     android:paddingBottom="8dp" />
 
-                <!-- Recommendation -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -133,7 +125,6 @@
                     android:text="• Take short breaks\n• Review reports before 3 PM\n• Drink water" />
             </LinearLayout>
 
-            <!-- Calendar View -->
             <CalendarView
                 android:id="@+id/calendarView"
                 android:layout_width="match_parent"
@@ -141,7 +132,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Selected Date Info -->
             <TextView
                 android:id="@+id/txtSelectedDate"
                 android:layout_width="wrap_content"
@@ -151,7 +141,6 @@
                 android:textColor="#666666"
                 android:paddingBottom="8dp" />
 
-            <!-- Customize Calendar Button -->
             <Button
                 android:id="@+id/btnCustomizeCalendar"
                 android:layout_width="wrap_content"
