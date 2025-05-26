@@ -2,14 +2,24 @@ package com.example.mainproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class PaymentActivity extends AppCompatActivity {
 
     private RadioGroup rgPlans;
     private EditText etName, etReference, etAmount;
     private Button btnPay;
+    private Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    private static final String PHP_URL = "http://10.0.2.2/myapp/payment.php"; // Change to your actual PHP URL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +58,6 @@ public class PaymentActivity extends AppCompatActivity {
                 return;
             }
 
-            // Validate and format amount
             double amount;
             try {
                 amount = Double.parseDouble(amountStr);
@@ -61,15 +70,86 @@ public class PaymentActivity extends AppCompatActivity {
                 return;
             }
 
-            // Here we assume the payment is successful (no PHP interaction)
-            Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
+            // Disable the button to prevent multiple clicks
+            btnPay.setEnabled(false);
 
-            // Send selected plan back to SubscriptionActivity
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("selected_plan", plan);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            // Call the backend PHP to submit payment
+            submitPaymentToServer(plan, name, reference, amount);
         });
+    }
+
+    private void submitPaymentToServer(String plan, String name, String reference, double amount) {
+        new Thread(() -> {
+            try {
+                String postData = "plan=" + URLEncoder.encode(plan, "UTF-8") +
+                        "&name=" + URLEncoder.encode(name, "UTF-8") +
+                        "&reference_no=" + URLEncoder.encode(reference, "UTF-8") +
+                        "&amount=" + URLEncoder.encode(String.valueOf(amount), "UTF-8");
+
+                URL url = new URL(PHP_URL);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("POST");
+                conn.setDoOutput(true);
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+                // Write POST data
+                try (OutputStream os = conn.getOutputStream()) {
+                    os.write(postData.getBytes());
+                    os.flush();
+                }
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder responseBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        responseBuilder.append(line);
+                    }
+                    reader.close();
+
+                    String response = responseBuilder.toString().trim();
+
+                    mainHandler.post(() -> {
+                        btnPay.setEnabled(true);
+                        if (response.startsWith("error:")) {
+                            Toast.makeText(PaymentActivity.this, "Server error: " + response, Toast.LENGTH_LONG).show();
+                        } else {
+                            // We got the inserted payment ID, send result back
+                            int paymentId;
+                            try {
+                                paymentId = Integer.parseInt(response);
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(PaymentActivity.this, "Invalid server response.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            Toast.makeText(PaymentActivity.this, "Payment successful!", Toast.LENGTH_SHORT).show();
+
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("selected_plan", plan);
+                            resultIntent.putExtra("payments_id", paymentId);
+                            setResult(RESULT_OK, resultIntent);
+                            finish();
+                        }
+                    });
+                } else {
+                    mainHandler.post(() -> {
+                        btnPay.setEnabled(true);
+                        Toast.makeText(PaymentActivity.this, "Failed to connect to server. HTTP code: " + responseCode, Toast.LENGTH_LONG).show();
+                    });
+                }
+                conn.disconnect();
+
+            } catch (Exception e) {
+                mainHandler.post(() -> {
+                    btnPay.setEnabled(true);
+                    Toast.makeText(PaymentActivity.this, "Exception: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+            }
+        }).start();
     }
 
     private String toSentenceCase(String input) {
