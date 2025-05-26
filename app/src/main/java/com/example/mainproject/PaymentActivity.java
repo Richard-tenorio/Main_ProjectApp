@@ -19,7 +19,7 @@ public class PaymentActivity extends AppCompatActivity {
     private Button btnPay;
     private Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    private static final String PHP_URL = "http://10.0.2.2/myapp/payment.php"; // Change to your actual PHP URL
+    private static final String PHP_URL = "http://10.0.2.2/myapp/payment.php"; // Optional
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +70,32 @@ public class PaymentActivity extends AppCompatActivity {
                 return;
             }
 
-            // Disable the button to prevent multiple clicks
+            // Validate amount matches selected plan
+            if (!isValidAmount(plan, amount)) {
+                Toast.makeText(this, "Amount for " + plan + " plan must be exactly " + (int) amountForPlan(plan) + ".", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Disable button to prevent multiple clicks
             btnPay.setEnabled(false);
 
-            // Call the backend PHP to submit payment
+            // OPTIONAL: Send to backend
             submitPaymentToServer(plan, name, reference, amount);
         });
+    }
+
+    private boolean isValidAmount(String plan, double amount) {
+        double expected = amountForPlan(plan);
+        return amount == expected;
+    }
+
+    private double amountForPlan(String plan) {
+        switch (plan.toLowerCase()) {
+            case "basic": return 200;
+            case "premium": return 750;
+            case "sponsor": return 375;
+            default: return 0;
+        }
     }
 
     private void submitPaymentToServer(String plan, String name, String reference, double amount) {
@@ -95,7 +115,6 @@ public class PaymentActivity extends AppCompatActivity {
                 conn.setReadTimeout(5000);
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-                // Write POST data
                 try (OutputStream os = conn.getOutputStream()) {
                     os.write(postData.getBytes());
                     os.flush();
@@ -118,7 +137,6 @@ public class PaymentActivity extends AppCompatActivity {
                         if (response.startsWith("error:")) {
                             Toast.makeText(PaymentActivity.this, "Server error: " + response, Toast.LENGTH_LONG).show();
                         } else {
-                            // We got the inserted payment ID, send result back
                             int paymentId;
                             try {
                                 paymentId = Integer.parseInt(response);
@@ -126,6 +144,7 @@ public class PaymentActivity extends AppCompatActivity {
                                 Toast.makeText(PaymentActivity.this, "Invalid server response.", Toast.LENGTH_LONG).show();
                                 return;
                             }
+
                             Toast.makeText(PaymentActivity.this, "Payment successful!", Toast.LENGTH_SHORT).show();
 
                             Intent resultIntent = new Intent();
@@ -142,7 +161,6 @@ public class PaymentActivity extends AppCompatActivity {
                     });
                 }
                 conn.disconnect();
-
             } catch (Exception e) {
                 mainHandler.post(() -> {
                     btnPay.setEnabled(true);

@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Title outside the box -->
+        <!-- Title -->
         <TextView
             android:id="@+id/tvCreateAccountTitle"
             android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             android:padding="24dp"
             android:elevation="8dp">
 
-            <!-- Label: PLAN -->
+            <!-- PLAN -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,7 +42,6 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
-            <!-- RadioGroup for plan selection -->
             <RadioGroup
                 android:id="@+id/rgPlans"
                 android:layout_width="match_parent"
@@ -60,11 +59,11 @@
                     app:buttonTint="#FFFFFF" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/rbWhole"
+                    android:id="@+id/rbPremium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Whole"
+                    android:text="Premium"
                     android:textColor="#FFFFFF"
                     app:buttonTint="#FFFFFF" />
 
@@ -78,7 +77,7 @@
                     app:buttonTint="#FFFFFF" />
             </RadioGroup>
 
-            <!-- Label: NAME -->
+            <!-- NAME -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +86,6 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
-            <!-- Name Input -->
             <EditText
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
@@ -100,7 +98,7 @@
                 android:padding="10dp"
                 android:textColor="#000000" />
 
-            <!-- Label: REFERENCE NO. -->
+            <!-- REFERENCE NO. -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,19 +108,18 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
-            <!-- Reference Input -->
             <EditText
                 android:id="@+id/etReference"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:hint="Enter Reference Number"
-                android:inputType="text"
+                android:inputType="number"
                 android:minHeight="48dp"
                 android:padding="10dp"
                 android:textColor="#000000" />
 
-            <!-- Label: AMOUNT -->
+            <!-- AMOUNT -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,7 +129,6 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold" />
 
-            <!-- Amount Input -->
             <EditText
                 android:id="@+id/etAmount"
                 android:layout_width="match_parent"
@@ -144,7 +140,7 @@
                 android:padding="10dp"
                 android:textColor="#000000" />
 
-            <!-- Confirmation Checkbox -->
+            <!-- CONFIRMATION -->
             <CheckBox
                 android:id="@+id/cbConfirm"
                 android:layout_width="match_parent"
@@ -154,7 +150,7 @@
                 android:text="I confirm this payment is correct and final"
                 android:textColor="#FFFFFF" />
 
-            <!-- Pay Button -->
+            <!-- PAY BUTTON -->
             <Button
                 android:id="@+id/btnPay"
                 android:layout_width="wrap_content"
@@ -164,7 +160,6 @@
                 android:backgroundTint="#F5F50A"
                 android:text="Proceed to Pay"
                 android:textColor="#000000" />
-
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
