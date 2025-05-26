@@ -2,9 +2,9 @@ package com.example.mainproject;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +25,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
     private TextView tvSelectedPlan;
     private Button btnGetPlan;
-    private Integer id = null;  // changed from userId to id
+    private Integer paymentsId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +44,9 @@ public class SubscriptionActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-
-        // Check if id exists in SharedPreferences
-        if (prefs.contains("id")) {
-            id = prefs.getInt("id", 0);
-            fetchUserPlan(id);
+        if (prefs.contains("payments_id")) {
+            paymentsId = prefs.getInt("payments_id", 0);
+            fetchUserPlan(paymentsId);
         } else {
             tvSelectedPlan.setText("You don't have an active plan yet.");
         }
@@ -59,51 +57,52 @@ public class SubscriptionActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchUserPlan(int id) {
-        new AsyncTask<Integer, Void, String>() {
-            @Override
-            protected String doInBackground(Integer... params) {
-                int uid = params[0];
-                try {
-                    String urlStr = "http://10.0.2.2/myapp/subscription.php?id=" + URLEncoder.encode(String.valueOf(uid), "UTF-8");
-                    URL url = new URL(urlStr);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(5000);
-                    conn.setReadTimeout(5000);
+    private void fetchUserPlan(int payments_id) {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
 
-                    int responseCode = conn.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                        StringBuilder sb = new StringBuilder();
-                        String line;
-                        while ((line = br.readLine()) != null) {
-                            sb.append(line);
-                        }
-                        br.close();
-                        return sb.toString().trim();
-                    } else {
-                        return "error: HTTP code " + responseCode;
+        new Thread(() -> {
+            try {
+                String urlStr = "http://10.0.2.2/myapp/subcription.php?payments_id=" + URLEncoder.encode(String.valueOf(payments_id), "UTF-8");
+                URL url = new URL(urlStr);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
                     }
-                } catch (Exception e) {
-                    return "error: " + e.getMessage();
-                }
-            }
+                    reader.close();
 
-            @Override
-            protected void onPostExecute(String result) {
-                Log.d("SubscriptionActivity", "Plan result: " + result);
+                    String result = sb.toString().trim();
 
-                if (result.startsWith("error:")) {
-                    tvSelectedPlan.setText("Failed to fetch plan");
-                    Toast.makeText(SubscriptionActivity.this, result, Toast.LENGTH_LONG).show();
-                } else if (result.equalsIgnoreCase("none") || result.isEmpty()) {
-                    tvSelectedPlan.setText("No active plan found");
+                    mainHandler.post(() -> {
+                        if (result.startsWith("error:")) {
+                            tvSelectedPlan.setText("Failed to fetch plan");
+                            Toast.makeText(SubscriptionActivity.this, result, Toast.LENGTH_LONG).show();
+                        } else if (result.equalsIgnoreCase("none") || result.isEmpty()) {
+                            tvSelectedPlan.setText("No active plan found");
+                        } else {
+                            tvSelectedPlan.setText("Your current plan: " + result);
+                        }
+                    });
                 } else {
-                    tvSelectedPlan.setText("Your current plan: " + result);
+                    mainHandler.post(() -> {
+                        tvSelectedPlan.setText("Failed to connect (HTTP " + responseCode + ")");
+                    });
                 }
+            } catch (Exception e) {
+                mainHandler.post(() -> {
+                    tvSelectedPlan.setText("Error: " + e.getMessage());
+                    Toast.makeText(SubscriptionActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
             }
-        }.execute(id);
+        }).start();
     }
 
     @Override
@@ -111,21 +110,20 @@ public class SubscriptionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PAYMENT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            int returnedId = data.getIntExtra("id", 0);
+            int returnedPaymentsId = data.getIntExtra("payments_id", 0);
 
-            if (returnedId > 0) {
-                id = returnedId;
+            if (returnedPaymentsId > 0) {
+                paymentsId = returnedPaymentsId;
 
-                // Save new id after payment
                 SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("id", id);
+                editor.putInt("payments_id", paymentsId);
                 editor.apply();
 
-                fetchUserPlan(id);
+                fetchUserPlan(paymentsId);
                 Toast.makeText(this, "Plan updated after payment", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "No ID returned after payment", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No payment ID returned after payment", Toast.LENGTH_SHORT).show();
             }
         }
     }
