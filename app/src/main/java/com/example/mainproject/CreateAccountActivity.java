@@ -42,12 +42,31 @@ public class CreateAccountActivity extends AppCompatActivity {
         btnConfirm = findViewById(R.id.btnConfirm);
         cbConfirmInfo = findViewById(R.id.cbConfirmInfo);
 
-        // Capitalize first letter of each name field
+        etEmail.setEnabled(false);
+
         setCapitalizationWatcher(etFirstName);
         setCapitalizationWatcher(etLastName);
         setCapitalizationWatcher(etMiddleName);
+        setSentenceCapitalizationWatcher(etAddress);
+        setSentenceCapitalizationWatcher(etCity);
 
-        btnConfirm.setVisibility(View.GONE); // Hide button initially
+        etFirstName.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(android.text.Editable s) {
+                generateEmail();
+            }
+        });
+
+        etLastName.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(android.text.Editable s) {
+                generateEmail();
+            }
+        });
+
+        btnConfirm.setVisibility(View.GONE);
 
         cbConfirmInfo.setOnCheckedChangeListener((buttonView, isChecked) -> {
             btnConfirm.setVisibility(isChecked ? View.VISIBLE : View.GONE);
@@ -84,7 +103,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(android.text.Editable editable) {
@@ -102,6 +121,39 @@ public class CreateAccountActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setSentenceCapitalizationWatcher(EditText editText) {
+        editText.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(android.text.Editable editable) {
+                String text = editable.toString();
+                if (!text.equals(text.toUpperCase())) {
+                    String formatted = text.isEmpty() ? "" :
+                            text.substring(0, 1).toUpperCase() + text.substring(1).toLowerCase();
+                    editText.removeTextChangedListener(this);
+                    editText.setText(formatted);
+                    editText.setSelection(formatted.length());
+                    editText.addTextChangedListener(this);
+                }
+            }
+        });
+    }
+
+    private void generateEmail() {
+        String firstName = etFirstName.getText().toString().trim().toLowerCase();
+        String lastName = etLastName.getText().toString().trim().toLowerCase();
+
+        if (!firstName.isEmpty() && !lastName.isEmpty()) {
+            String email = firstName.charAt(0) + lastName + "@umak.edu.ph";
+            etEmail.setText(email);
+        }
     }
 
     private void registerUser() {
@@ -126,12 +178,6 @@ public class CreateAccountActivity extends AppCompatActivity {
             etFirstName.setError("Invalid characters in name");
             etMiddleName.setError("Invalid characters in name");
             Toast.makeText(this, "Names must not contain numbers or special characters.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!email.endsWith("@umak.edu.ph")) {
-            etEmail.setError("Email must end with '@umak.edu.ph'");
-            Toast.makeText(this, "Email must end with '@umak.edu.ph'.", Toast.LENGTH_SHORT).show();
             return;
         }
 
