@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Plan 3 - Whole Semester Plan (Moved to Top) -->
+            <!-- Plan 3 - Whole Semester Plan (Gold) -->
             <LinearLayout
                 android:id="@+id/box3"
                 android:orientation="vertical"
@@ -72,7 +72,7 @@
                     <ImageView
                         android:layout_width="72dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_launcher_foreground"
+                        android:src="@drawable/plan_whole_semester"
                         android:scaleType="centerCrop"
                         android:contentDescription="Whole Semester Plan Image" />
 
@@ -86,7 +86,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Plan 2 - Sponsored Plan (Unchanged) -->
+            <!-- Plan 2 - Sponsored Plan (Silver) -->
             <LinearLayout
                 android:id="@+id/box2"
                 android:orientation="vertical"
@@ -119,7 +119,7 @@
                     <ImageView
                         android:layout_width="72dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_launcher_foreground"
+                        android:src="@drawable/plan_sponsored"
                         android:scaleType="centerCrop"
                         android:contentDescription="Sponsored Plan Image" />
 
@@ -133,7 +133,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Plan 1 - 1 Month Plan (Moved to Bottom) -->
+            <!-- Plan 1 - 1 Month Plan (Bronze) -->
             <LinearLayout
                 android:id="@+id/box1"
                 android:orientation="vertical"
@@ -166,7 +166,7 @@
                     <ImageView
                         android:layout_width="72dp"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_launcher_foreground"
+                        android:src="@drawable/plan_one_month"
                         android:scaleType="centerCrop"
                         android:contentDescription="1 Month Plan Image" />
 
