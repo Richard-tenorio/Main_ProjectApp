@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Plan 3 - Whole Semester Plan (Gold) -->
+            <!-- Whole Semester Plan -->
             <LinearLayout
                 android:id="@+id/box3"
                 android:orientation="vertical"
@@ -76,17 +76,30 @@
                         android:scaleType="centerCrop"
                         android:contentDescription="Whole Semester Plan Image" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Whole Semester Plan\nAll the Time"
-                        android:textSize="16sp"
-                        android:paddingStart="12dp" />
+                        android:orientation="vertical"
+                        android:paddingStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Whole Semester Plan"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="All the Time"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Plan 2 - Sponsored Plan (Silver) -->
+            <!-- Sponsored Plan -->
             <LinearLayout
                 android:id="@+id/box2"
                 android:orientation="vertical"
@@ -123,17 +136,30 @@
                         android:scaleType="centerCrop"
                         android:contentDescription="Sponsored Plan Image" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Sponsored\nOnly for Sponsored Students"
-                        android:textSize="16sp"
-                        android:paddingStart="12dp" />
+                        android:orientation="vertical"
+                        android:paddingStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sponsored"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Only for Sponsored Students"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Plan 1 - 1 Month Plan (Bronze) -->
+            <!-- 1 Month Plan -->
             <LinearLayout
                 android:id="@+id/box1"
                 android:orientation="vertical"
@@ -170,16 +196,28 @@
                         android:scaleType="centerCrop"
                         android:contentDescription="1 Month Plan Image" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="1 Month Plan\nAccess to core features"
-                        android:textSize="16sp"
-                        android:paddingStart="12dp" />
+                        android:orientation="vertical"
+                        android:paddingStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1 Month Plan"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Access to core features"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
