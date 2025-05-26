@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,11 +34,33 @@ public class SubscriptionActivity extends AppCompatActivity {
         }
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
 
-        // Get username from intent extras (replace "username" with your actual key)
+        // Get username from intent extras
         username = getIntent().getStringExtra("username");
-        if (username == null) username = "default_user";
+        if (username == null || username.trim().isEmpty()) {
+            username = "default_user";  // fallback username
+        }
 
-        // Load saved plan for this user from SharedPreferences
+        // Always reset any saved plan on login
+        resetUserPlanOnLogin();
+
+        // Load plan after reset
+        loadUserPlan();
+
+        btnGetPlan.setOnClickListener(v -> {
+            Intent intent = new Intent(SubscriptionActivity.this, PaymentActivity.class);
+            intent.putExtra("username", username);
+            startActivityForResult(intent, PAYMENT_REQUEST_CODE);
+        });
+    }
+
+    private void resetUserPlanOnLogin() {
+        SharedPreferences prefs = getSharedPreferences("subscription_prefs_" + username, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("saved_plan"); // only remove plan, keep other data if needed
+        editor.apply();
+    }
+
+    private void loadUserPlan() {
         SharedPreferences prefs = getSharedPreferences("subscription_prefs_" + username, MODE_PRIVATE);
         String savedPlan = prefs.getString("saved_plan", null);
 
@@ -46,12 +69,16 @@ public class SubscriptionActivity extends AppCompatActivity {
         } else {
             tvSelectedPlan.setText("You don't have an active plan yet.");
         }
+    }
 
-        btnGetPlan.setOnClickListener(v -> {
-            Intent intent = new Intent(SubscriptionActivity.this, PaymentActivity.class);
-            intent.putExtra("username", username); // pass username if needed in PaymentActivity
-            startActivityForResult(intent, PAYMENT_REQUEST_CODE);
-        });
+    public void clearUserPlan() {
+        SharedPreferences prefs = getSharedPreferences("subscription_prefs_" + username, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        tvSelectedPlan.setText("You don't have an active plan yet.");
+        Toast.makeText(this, "Your subscription plan has been reset.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -64,13 +91,12 @@ public class SubscriptionActivity extends AppCompatActivity {
                 tvSelectedPlan.setText("Your selected plan: " + selectedPlan);
                 Toast.makeText(this, "Plan updated after payment", Toast.LENGTH_SHORT).show();
 
-                // Save plan per user
                 SharedPreferences prefs = getSharedPreferences("subscription_prefs_" + username, MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("saved_plan", selectedPlan);
                 editor.apply();
             } else {
-                tvSelectedPlan.setText("No plan selected.");
+                tvSelectedPlan.setText("You don't have an active plan yet.");
                 Toast.makeText(this, "No plan returned after payment", Toast.LENGTH_SHORT).show();
             }
         }
