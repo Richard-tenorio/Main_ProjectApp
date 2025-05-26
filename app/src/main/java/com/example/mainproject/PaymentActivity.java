@@ -1,16 +1,9 @@
 package com.example.mainproject;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -55,7 +48,7 @@ public class PaymentActivity extends AppCompatActivity {
                 return;
             }
 
-            // Validate and format amount as double with 2 decimals
+            // Validate and format amount
             double amount;
             try {
                 amount = Double.parseDouble(amountStr);
@@ -68,10 +61,14 @@ public class PaymentActivity extends AppCompatActivity {
                 return;
             }
 
-            String amountFormatted = String.format("%.2f", amount);
+            // Here we assume the payment is successful (no PHP interaction)
+            Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
 
-            btnPay.setEnabled(false);
-            new SendPaymentTask().execute(plan, name, reference, amountFormatted);
+            // Send selected plan back to SubscriptionActivity
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("selected_plan", plan);
+            setResult(RESULT_OK, resultIntent);
+            finish();
         });
     }
 
@@ -86,63 +83,5 @@ public class PaymentActivity extends AppCompatActivity {
             }
         }
         return sb.toString().trim();
-    }
-
-    private class SendPaymentTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String plan = params[0];
-            String name = params[1];
-            String reference = params[2];
-            String amount = params[3];
-
-            try {
-                URL url = new URL("http://10.0.2.2/myapp/payment.php"); // Localhost on Android emulator
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setDoOutput(true);
-
-                String postData = "plan=" + URLEncoder.encode(plan, "UTF-8") +
-                        "&name=" + URLEncoder.encode(name, "UTF-8") +
-                        "&reference_no=" + URLEncoder.encode(reference, "UTF-8") +
-                        "&amount=" + URLEncoder.encode(amount, "UTF-8");
-
-                OutputStream os = conn.getOutputStream();
-                os.write(postData.getBytes());
-                os.flush();
-                os.close();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    response.append(line);
-                }
-
-                br.close();
-                return response.toString().trim();
-
-            } catch (Exception e) {
-                return "error: " + e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            btnPay.setEnabled(true);
-            result = result.trim();
-            Log.d("PaymentResult", "Server response: '" + result + "'");
-
-            if ("success".equalsIgnoreCase(result)) {
-                Toast.makeText(PaymentActivity.this, "Payment successful!", Toast.LENGTH_LONG).show();
-                // Go back to SubscriptionActivity
-                Intent intent = new Intent(PaymentActivity.this, SubscriptionActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(PaymentActivity.this, "Payment failed: " + result, Toast.LENGTH_LONG).show();
-            }
-        }
     }
 }
