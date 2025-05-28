@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     CalendarView calendarView;
     Button btnCustomizeCalendar, btnSettings, btnMenu;
 
+
     String selectedDate = "";
     SharedPreferences sharedPreferences;
 
